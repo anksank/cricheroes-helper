@@ -16,14 +16,14 @@ const rl = readline.createInterface({
 var catchCount = 0;
 // Event handler for each line read
 rl.on('line', (line) => {
-  catchCount += runScript(line);
+  runScript(line);
 });
 
 console.log("catch count: " + catchCount);
 
 async function runScript(url) {
   // Launch a headless browser
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch(headless="new");
 
   // Open multiple pages
   const page1 = await browser.newPage();
@@ -36,15 +36,19 @@ async function runScript(url) {
 
   // Execute JavaScript code on each page and get the result
   const result1 = await page1.evaluate(() => {
+  	console.log(document);
     var elements = document.getElementsByClassName("outtype-bowler");
 	var counter = 0;
-	for (var i = 0; i < elements.length; i++) {
-		var element = elements[i].getInnerHTML().trimStart().trimEnd();
-		if (element.startsWith("c") && element.includes("adbhut")) {
-			counter++;
-		}
-	}
-    return counter;
+	console.log("valid elements: " + elements.length);
+	return elements.length;
+//	for (var i = 0; i < elements.length; i++) {
+//		var element = elements[i].getInnerHTML().trimStart().trimEnd();
+//		console.log(element);
+//		if (element.startsWith("c") && (element.includes("Ankit") || element.includes('adbhut'))) {
+//			counter++;
+//		}
+//	}
+//    return counter;
   });
 
 //  const result2 = await page2.evaluate(() => {
@@ -56,7 +60,7 @@ async function runScript(url) {
   await browser.close();
 
   // Print the results
-  console.log('Result on page 1:', result1);
+  console.log('Result on page 1:'+ result1);
   return result1;
 //  console.log('Result on page 2:', result2);
 }
